@@ -16,4 +16,4 @@ To build and run examples: (You will need to have gnuplot installed to run them)
 
 	$ make examples
 	$ ./out/kmeans
-
+	$ ./out/linalg
