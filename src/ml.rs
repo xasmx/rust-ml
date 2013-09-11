@@ -6,3 +6,12 @@ extern mod la;
 pub mod clustering {
   pub mod kmeans;
 }
+
+pub mod regression {
+  pub mod linear;
+}
+
+pub mod opt {
+  pub mod graddescent;
+}
+
