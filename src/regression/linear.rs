@@ -5,7 +5,8 @@ use la::matrix::*;
 use opt::graddescent;
 
 struct LinearRegression {
-  theta : ~Matrix<f64>
+  theta : ~Matrix<f64>,
+  cost_history : ~[f64]
 }
 
 pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint) -> LinearRegression {
@@ -22,16 +23,18 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint) -
     (grad, cost)
   };
 
-  graddescent::gradient_descent(&extx, y, theta, alpha, num_iter, dcost_cost_fn);
+  let cost_history = graddescent::gradient_descent(&extx, y, theta, alpha, num_iter, dcost_cost_fn);
   LinearRegression {
-    theta : theta
+    theta : theta,
+    cost_history : cost_history
   } 
 }
 
 pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
   let extx = one_vector(x.rows()).cr(x);
   LinearRegression {
-    theta : ~((extx.t() * extx).inverse().unwrap() * extx.t() * *y)
+    theta : ~((extx.t() * extx).inverse().unwrap() * extx.t() * *y),
+    cost_history : ~[]
   }
 }
 
