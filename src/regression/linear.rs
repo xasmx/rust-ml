@@ -17,6 +17,13 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : int) ->
   } 
 }
 
+pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
+  let extx = one_vector(x.rows()).cr(x);
+  LinearRegression {
+    theta : ~((extx.t() * extx).inverse().unwrap() * extx.t() * *y)
+  }
+}
+
 impl LinearRegression {
   pub fn predict(&self, x : &Matrix<f64>) -> f64 {
     assert!(x.noCols == 1);
