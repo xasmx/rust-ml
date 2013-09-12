@@ -8,12 +8,11 @@ Features:
 * regression
   * linear regression
 
-To build rust-ml:
+To build rust-ml and examples:
 
 	$ make
 
-To build and run examples: (You will need to have gnuplot installed to run them).
+To run examples: (You will need to have gnuplot installed to run them).
 
-	$ make examples
 	$ ./out/kmeans
 	$ ./out/linalg

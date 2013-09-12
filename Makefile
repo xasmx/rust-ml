@@ -5,7 +5,7 @@ RUST_SRC=${SRC_DIR}/ml.rs
 BUILD_DIR=out
 
 .PHONY: all
-all: build
+all: build examples
 
 build: $(RUST_SRC)
 	mkdir -p $(BUILD_DIR)

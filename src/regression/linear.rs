@@ -2,16 +2,27 @@ use std::vec;
 
 use la::matrix::*;
 
-use super::super::opt::graddescent;
+use opt::graddescent;
 
 struct LinearRegression {
   theta : ~Matrix<f64>
 }
 
-pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : int) -> LinearRegression {
+pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint) -> LinearRegression {
   let extx = one_vector(x.rows()).cr(x);
   let mut theta = ~matrix(extx.cols(), 1, vec::from_elem(extx.cols(), 0.0f64));
-  graddescent::gradient_descent(&extx, y, theta, alpha, num_iter);
+
+  let dcost_cost_fn = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> (Matrix<f64>, f64) {
+    // J(x) = 1/(2m) * SUM{i = 1 to m}: (theta . [1;x_i] - y_i)^2
+    // dJ(x)/dtheta_j = 1/m * SUM{i = 1 to m}: (theta . [1;x_i] - y_i) * x_i_j
+
+    let error = x * *theta - *y;
+    let grad = (x.t() * error).scale(1.0f64 / (x.noRows as f64));
+    let cost = (error.t() * error).scale(1.0 / (2.0 * (x.noRows as f64))).get(0, 0);
+    (grad, cost)
+  };
+
+  graddescent::gradient_descent(&extx, y, theta, alpha, num_iter, dcost_cost_fn);
   LinearRegression {
     theta : theta
   } 
