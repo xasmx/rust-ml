@@ -27,4 +27,5 @@ clean:
 examples: build examples/kmeans.rs examples/linreg.rs
 	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/kmeans.rs
 	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/linreg.rs
+	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/logreg.rs
 
