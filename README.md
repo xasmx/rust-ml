@@ -3,6 +3,8 @@
 Machine learning library for the Rust programming language.
 
 Features:
+* classification
+  * logistic regression
 * clustering
   * k-means
 * regression

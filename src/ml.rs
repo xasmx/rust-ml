@@ -4,6 +4,10 @@
 extern mod gnuplot;
 extern mod la;
 
+pub mod classification {
+  pub mod logistic;
+}
+
 pub mod clustering {
   pub mod kmeans;
 }

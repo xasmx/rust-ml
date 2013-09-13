@@ -39,6 +39,7 @@ pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
 }
 
 impl LinearRegression {
+  // h(x) = theta^T * [1; x]
   pub fn predict(&self, x : &Matrix<f64>) -> f64 {
     assert!(x.noCols == 1);
     assert!((x.noRows + 1) == self.theta.data.len());
