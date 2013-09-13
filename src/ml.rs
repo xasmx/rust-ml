@@ -22,5 +22,6 @@ pub mod opt {
 
 pub mod graph {
   pub mod costgraph;
+  pub mod decisionboundary;
 }
 
