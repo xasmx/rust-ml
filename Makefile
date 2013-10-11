@@ -1,5 +1,5 @@
 RUSTC?=rustc
-RUSTFLAGS=
+RUSTFLAGS=-L lib
 SRC_DIR=src
 RUST_SRC=${SRC_DIR}/ml.rs
 BUILD_DIR=out
@@ -25,7 +25,7 @@ clean:
 
 .PHONY: examples
 examples: build examples/kmeans.rs examples/linreg.rs
-	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/kmeans.rs
-	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/linreg.rs
-	$(RUSTC) -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/logreg.rs
+	$(RUSTC) -L lib -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/kmeans.rs
+	$(RUSTC) -L lib -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/linreg.rs
+	$(RUSTC) -L lib -L $(BUILD_DIR) --out-dir $(BUILD_DIR) examples/logreg.rs
 

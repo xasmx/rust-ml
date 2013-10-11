@@ -2,7 +2,7 @@ use std::vec;
 
 use gnuplot::*;
 
-fn show_cost_graph(cost_history : &[f64]) {
+pub fn show_cost_graph(cost_history : &[f64]) {
   let mut x = vec::with_capacity(cost_history.len());
   for i in range(0, cost_history.len()) {
     x.push(i)

@@ -1,3 +1,5 @@
+#[feature(globs)];
+
 extern mod gnuplot;
 extern mod la;
 extern mod ml;

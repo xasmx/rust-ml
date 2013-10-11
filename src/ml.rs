@@ -1,6 +1,8 @@
 #[crate_type = "lib"];
 #[link(name = "ml", vers = "0.1")];
 
+#[feature(globs)];
+
 extern mod gnuplot;
 extern mod la;
 

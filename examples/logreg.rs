@@ -1,7 +1,10 @@
+#[feature(globs)];
+
 extern mod gnuplot;
 extern mod la;
 extern mod ml;
 
+use std::from_str::FromStr;
 use std::vec;
 
 use gnuplot::*;
@@ -11,7 +14,7 @@ use ml::classification::logistic;
 use ml::graph::costgraph;
 
 fn main() {
-  fn parser(s : &str) -> f64 { std::f64::from_str(s).unwrap() };
+  fn parser(s : &str) -> f64 { FromStr::from_str(s).unwrap() };
   let data = read_csv("example_data/logreg.csv", parser);
 
   let x = data.permute_columns([0, 1]);
