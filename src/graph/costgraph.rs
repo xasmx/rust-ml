@@ -1,9 +1,9 @@
-use std::vec;
+use std::vec::Vec;
 
 use gnuplot::*;
 
-pub fn show_cost_graph(cost_history : &[f64]) {
-  let mut x = vec::with_capacity(cost_history.len());
+pub fn show_cost_graph(cost_history : &Vec<f64>) {
+  let mut x = Vec::with_capacity(cost_history.len());
   for i in range(0, cost_history.len()) {
     x.push(i)
   }

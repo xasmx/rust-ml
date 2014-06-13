@@ -1,33 +1,33 @@
-#[feature(globs)];
+#![feature(globs)]
 
-extern mod gnuplot;
-extern mod la;
-extern mod ml;
+extern crate gnuplot;
+extern crate la;
+extern crate ml;
 
 use std::rand;
-use std::vec;
+use std::vec::Vec;
 
 use gnuplot::*;
 use la::matrix::*;
 use ml::clustering::kmeans;
 
 fn main() {
-  let mut v = vec::from_elem(200, 0.0f64);
+  let mut v = Vec::from_elem(200, 0.0f64);
   for i in range(0, 100) {
-    v[i] = 10.0 * rand::random();
+    *v.get_mut(i as uint) = 10.0 * rand::random();
   }
   for i in range(101, 200) {
-    v[i] = 10.0 + 10.0 * rand::random();
+    *v.get_mut(i as uint) = 10.0 + 10.0 * rand::random();
   }
   
   let m = matrix(100, 2, v);
   let assignments = kmeans::kmeans(2, &m);
 
-  let mut xs = [vec::with_capacity(100), vec::with_capacity(100)];
-  let mut ys = [vec::with_capacity(100), vec::with_capacity(100)];
+  let mut xs = [Vec::with_capacity(100), Vec::with_capacity(100)];
+  let mut ys = [Vec::with_capacity(100), Vec::with_capacity(100)];
   for i in range(0, assignments.len()) {
-    xs[assignments[i]].push(m.data[i * m.cols()]);
-    ys[assignments[i]].push(m.data[i * m.cols() + 1]);
+    xs[*assignments.get(i)].push(*m.data.get(i * m.cols()));
+    ys[*assignments.get(i)].push(*m.data.get(i * m.cols() + 1));
   }
 
   let mut fg = Figure::new();

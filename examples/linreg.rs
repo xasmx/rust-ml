@@ -1,11 +1,11 @@
-#[feature(globs)];
+#![feature(globs)]
 
-extern mod gnuplot;
-extern mod la;
-extern mod ml;
+extern crate gnuplot;
+extern crate la;
+extern crate ml;
 
 use std::from_str::FromStr;
-use std::vec;
+use std::vec::Vec;
 
 use gnuplot::*;
 use la::matrix::*;
@@ -22,14 +22,14 @@ fn main() {
 
   let lr = linear::train(&x, &y, 0.005f64, 100);
 
-  let mut lx = vec::from_elem(2, 0.0f64);
-  let mut ly = vec::from_elem(2, 0.0f64);
+  let mut lx = Vec::from_elem(2, 0.0f64);
+  let mut ly = Vec::from_elem(2, 0.0f64);
   for i in range(0, lx.len()) {
-    lx[i] = (i as f64) * 30.0f64;
-    ly[i] = lr.predict(&matrix(1, 1, ~[lx[i]]));
+    *lx.get_mut(i) = (i as f64) * 30.0f64;
+    *ly.get_mut(i) = lr.predict(&matrix(1, 1, vec![*lx.get(i)]));
   }
 
-  costgraph::show_cost_graph(lr.cost_history);
+  costgraph::show_cost_graph(&lr.cost_history);
 
   let mut fg = Figure::new();
 

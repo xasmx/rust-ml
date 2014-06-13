@@ -1,10 +1,10 @@
-#[crate_type = "lib"];
-#[link(name = "ml", vers = "0.1")];
+#![crate_type = "lib"]
+#![crate_id = "ml#0.1"]
 
-#[feature(globs)];
+#![feature(globs)]
 
-extern mod gnuplot;
-extern mod la;
+extern crate gnuplot;
+extern crate la;
 
 pub mod classification {
   pub mod logistic;
