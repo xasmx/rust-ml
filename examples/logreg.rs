@@ -7,6 +7,7 @@ extern crate ml;
 use std::from_str::FromStr;
 
 use gnuplot::*;
+use la::matrix::*;
 use la::util::read_csv;
 use ml::classification::logistic;
 use ml::graph::{costgraph,decisionboundary};
@@ -17,7 +18,9 @@ fn main() {
 
   let x = data.permute_columns(&vec![0, 1]);
   let y = data.get_column(2).map(|v : &f64| { if *v == 0.0f64 { false } else { true } });
-  let lr = logistic::train(&x, &y, 0.005f64, 10000);
+  let mut cost_history = Vec::new();
+  let mut iter_count = 0;
+  let lr = logistic::train(&x, &y, 0.001f64, 500000, &mut Some(|cost| { if iter_count % 1000 == 0 { cost_history.push(cost); } iter_count += 1; }));
 
   let true_elements = data.select_rows(y.data.as_slice());
   let true_x = true_elements.get_column(0);
@@ -26,17 +29,24 @@ fn main() {
   let false_x = false_elements.get_column(0);
   let false_y = false_elements.get_column(1);
 
-  costgraph::show_cost_graph(&lr.cost_history);
-  //decisionboundary::show_decision_boundary_2d(&lr);
+  let mut fg = Figure::new();
+  costgraph::show_cost_graph(&mut fg, &cost_history);
+  fg.show();
 
-/*
-for i in range(0u, 100u) {
-  //let p = lr.p(&vector(~[false_x.get(i, 0), false_y.get(i, 0)]));
-  //io::println(fmt!("%?: %?", lr.predict(&vector(~[false_x.get(i, 0), false_y.get(i, 0)])), p));
-  let p = lr.p(&vector(~[true_x.get(i, 0), true_y.get(i, 0)]));
-  io::println(fmt!("%?: %?", lr.predict(&vector(~[true_x.get(i, 0), true_y.get(i, 0)])), p));
-}
-*/
+  let mut fg = Figure::new();
+  decisionboundary::show_decision_boundary_2d(&mut fg, &lr);
+  fg.show();
+
+  println!("falses:");
+  for i in range(0u, false_x.data.len()) {
+    let p = lr.p(&vector(vec![false_x.get(i, 0), false_y.get(i, 0)]));
+    println!("  {}: {}", lr.predict(&vector(vec![false_x.get(i, 0), false_y.get(i, 0)])), p);
+  }
+  println!("trues:");
+  for i in range(0u, true_x.data.len()) {
+    let p = lr.p(&vector(vec![true_x.get(i, 0), true_y.get(i, 0)]));
+    println!("  {}: {}", lr.predict(&vector(vec![true_x.get(i, 0), true_y.get(i, 0)])), p);
+  }
 
   let mut fg = Figure::new();
 

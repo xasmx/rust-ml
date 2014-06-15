@@ -6,15 +6,16 @@ use opt::graddescent;
 
 pub struct LogisticRegression {
   theta : Matrix<f64>,
-  threshold : f64,
-  pub cost_history : Vec<f64>
+  threshold : f64
 }
 
-pub fn train(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : uint) -> LogisticRegression {
+pub fn train(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : uint, iter_notify_f_opt : &mut Option<|f64| -> ()>) -> LogisticRegression {
   let extx = one_vector(x.rows()).cr(x);
   let numy = y.map(|b : &bool| -> f64 { if *b { 1.0 } else { 0.0 } });
   let mut theta = matrix(extx.cols(), 1, Vec::from_elem(extx.cols(), 0.0f64));
 
+  let calc_cost = iter_notify_f_opt.is_some();
+  let f = if calc_cost { iter_notify_f_opt.take_unwrap() } else { |_| { } };
   let dcost_cost_fn = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> (Matrix<f64>, f64) {
     // J(theta) = 1 / m * SUM{i = 1 to m}: Cost(h_theta(x), y)
     // Cost(h_theta(x), y) = { - log(h_theta(x))		, if y = true (1)
@@ -24,15 +25,17 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : uint) 
     // grad = 1 / m * x' * error
     let error = (x * *theta).map(|t : &f64| -> f64 { 1.0f64 / (1.0f64 + (- *t).exp()) }) - *y;
     let grad = (x.t() * error).scale(1.0f64 / (x.rows() as f64));
-    //let cost = (error.t() * error).scale(1.0 / (2.0 * (x.rows() as f64))).get(0, 0);
+    if calc_cost {
+      let cost = (error.t() * error).scale(1.0 / x.rows() as f64).get(0, 0);
+      f(cost);
+    }
     (grad, 0.0f64)
   };
 
-  let cost_history = graddescent::gradient_descent(&extx, &numy, &mut theta, alpha, num_iter, dcost_cost_fn);
+  graddescent::gradient_descent(&extx, &numy, &mut theta, alpha, num_iter, dcost_cost_fn);
   LogisticRegression {
     theta : theta,
-    threshold : 0.5,
-    cost_history : cost_history
+    threshold : 0.5
   } 
 }
 

@@ -29,7 +29,9 @@ fn main() {
     *ly.get_mut(i) = lr.predict(&matrix(1, 1, vec![*lx.get(i)]));
   }
 
-  costgraph::show_cost_graph(&lr.cost_history);
+  let mut fg = Figure::new();
+  costgraph::show_cost_graph(&mut fg, &lr.cost_history);
+  fg.show();
 
   let mut fg = Figure::new();
 
