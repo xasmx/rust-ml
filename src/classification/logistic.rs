@@ -40,6 +40,10 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : uint, 
 }
 
 impl LogisticRegression {
+  pub fn get_theta<'a>(&'a self) -> &'a Matrix<f64> {
+    &self.theta
+  }
+
   pub fn get_threshold(&self) -> f64 {
     self.threshold
   }

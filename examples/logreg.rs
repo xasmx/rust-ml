@@ -48,12 +48,21 @@ fn main() {
     println!("  {}: {}", lr.predict(&vector(vec![true_x.get(i, 0), true_y.get(i, 0)])), p);
   }
 
+  // Decision boundary is at t'x = 0
+  //   x_1 = - (t_0 + t_1 * x_0) / t_2
+  let theta = lr.get_theta();
+  let lx = vec![30.0f64, 100.0f64];
+  let y0 = - (theta.get(0, 0) + theta.get(1, 0) * *lx.get(0)) / theta.get(2, 0);
+  let y1 = - (theta.get(0, 0) + theta.get(1, 0) * *lx.get(1)) / theta.get(2, 0);
+  let ly = vec![y0, y1];
+
   let mut fg = Figure::new();
 
   fg.axes2d()
   .set_aspect_ratio(Fix(1.0))
   .points(true_x.data.iter(), true_y.data.iter(), [PointSymbol('x'), Color("#ffaa77")])
   .points(false_x.data.iter(), false_y.data.iter(), [PointSymbol('o'), Color("#333377")])
+  .lines(lx.iter(), ly.iter(), [Color("#006633")])
   .set_title("Logistic Regression", []);
 
   fg.show();
