@@ -1,5 +1,3 @@
-use std::vec::Vec;
-
 use la::matrix::*;
 
 // Gradient descent
@@ -9,16 +7,11 @@ pub fn gradient_descent(
     theta : &mut Matrix<f64>,
     alpha : f64,
     num_iter : uint,
-    dcost_cost_fn : |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> (Matrix<f64>, f64))
--> Vec<f64>
+    grad_f : |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> Matrix<f64>)
 {
-  let mut cost_history = Vec::with_capacity(num_iter);
   for _ in range(0, num_iter) {
-    let (grad, cost) = dcost_cost_fn(x, y, theta);
+    let grad = grad_f(x, y, theta);
     let step = grad.scale(alpha);
     theta.msub(&step);
-    cost_history.push(cost);
   }
-
-  cost_history
 }

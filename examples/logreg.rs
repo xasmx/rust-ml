@@ -20,7 +20,7 @@ fn main() {
   let y = data.get_column(2).map(|v : &f64| { if *v == 0.0f64 { false } else { true } });
   let mut cost_history = Vec::new();
   let mut iter_count = 0;
-  let lr = logistic::train(&x, &y, 0.001f64, 500000, &mut Some(|cost| { if iter_count % 1000 == 0 { cost_history.push(cost); } iter_count += 1; }));
+  let lr = logistic::train(&x, &y, 0.001f64, 500000, Some(|cost| { if iter_count % 1000 == 0 { cost_history.push(cost); } iter_count += 1; }));
 
   let true_elements = data.select_rows(y.data.as_slice());
   let true_x = true_elements.get_column(0);

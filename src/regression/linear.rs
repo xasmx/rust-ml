@@ -5,36 +5,38 @@ use la::matrix::*;
 use opt::graddescent;
 
 pub struct LinearRegression {
-  theta : Matrix<f64>,
-  pub cost_history : Vec<f64>
+  theta : Matrix<f64>
 }
 
-pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint) -> LinearRegression {
+pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint, iter_notify_f_opt : Option<|f64| -> ()>) -> LinearRegression {
   let extx = one_vector(x.rows()).cr(x);
   let mut theta = matrix(extx.cols(), 1, Vec::from_elem(extx.cols(), 0.0f64));
 
-  let dcost_cost_fn = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> (Matrix<f64>, f64) {
+  let calc_cost = iter_notify_f_opt.is_some();
+  let f = if calc_cost { iter_notify_f_opt.unwrap() } else { |_| { } };
+  let grad_f = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> Matrix<f64> {
     // J(x) = 1/(2m) * SUM{i = 1 to m}: (theta . [1;x_i] - y_i)^2
     // dJ(x)/dtheta_j = 1/m * SUM{i = 1 to m}: (theta . [1;x_i] - y_i) * x_i_j
 
     let error = x * *theta - *y;
     let grad = (x.t() * error).scale(1.0f64 / (x.rows() as f64));
-    let cost = (error.t() * error).scale(1.0 / (2.0 * (x.rows() as f64))).get(0, 0);
-    (grad, cost)
+    if calc_cost {
+      let cost = (error.t() * error).scale(1.0 / (2.0 * (x.rows() as f64))).get(0, 0);
+      f(cost);
+    }
+    grad
   };
 
-  let cost_history = graddescent::gradient_descent(&extx, y, &mut theta, alpha, num_iter, dcost_cost_fn);
+  graddescent::gradient_descent(&extx, y, &mut theta, alpha, num_iter, grad_f);
   LinearRegression {
-    theta : theta,
-    cost_history : cost_history
+    theta : theta
   } 
 }
 
 pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
   let extx = one_vector(x.rows()).cr(x);
   LinearRegression {
-    theta : (extx.t() * extx).inverse().unwrap() * extx.t() * *y,
-    cost_history : vec![]
+    theta : (extx.t() * extx).inverse().unwrap() * extx.t() * *y
   }
 }
 

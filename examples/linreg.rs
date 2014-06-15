@@ -19,8 +19,9 @@ fn main() {
 
   let x = data.get_column(0);
   let y = data.get_column(1);
+  let mut cost_history = vec![];
 
-  let lr = linear::train(&x, &y, 0.005f64, 100);
+  let lr = linear::train(&x, &y, 0.005f64, 100, Some(|cost| { cost_history.push(cost); }));
 
   let mut lx = Vec::from_elem(2, 0.0f64);
   let mut ly = Vec::from_elem(2, 0.0f64);
@@ -30,7 +31,7 @@ fn main() {
   }
 
   let mut fg = Figure::new();
-  costgraph::show_cost_graph(&mut fg, &lr.cost_history);
+  costgraph::show_cost_graph(&mut fg, &cost_history);
   fg.show();
 
   let mut fg = Figure::new();
