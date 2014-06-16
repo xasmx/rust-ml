@@ -2,6 +2,12 @@
 
 Machine learning library for the Rust programming language.
 
+## Documentation
+
+See [here](http://xasmx.github.io/rust-ml/doc/ml/index.html).
+
+## Features
+
 Features:
 * classification
   * logistic regression
@@ -10,11 +16,17 @@ Features:
 * regression
   * linear regression
 
-To build rust-ml and examples:
+## Building
 
-	$ make
+~~~
+make
+~~~
+
+## Examples
 
 To run examples: (You will need to have gnuplot installed to run them).
 
-	$ ./out/kmeans
-	$ ./out/linalg
+~~~
+./out/kmeans
+./out/linalg
+~~~
