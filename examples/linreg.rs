@@ -8,7 +8,7 @@ use std::from_str::FromStr;
 use std::vec::Vec;
 
 use gnuplot::*;
-use la::matrix::*;
+use la::Matrix;
 use la::util::read_csv;
 use ml::LinearRegression;
 use ml::graph;
@@ -27,7 +27,7 @@ fn main() {
   let mut ly = Vec::from_elem(2, 0.0f64);
   for i in range(0, lx.len()) {
     *lx.get_mut(i) = (i as f64) * 30.0f64;
-    *ly.get_mut(i) = lr.predict(&matrix(1, 1, vec![*lx.get(i)]));
+    *ly.get_mut(i) = lr.predict(&Matrix::new(1, 1, vec![*lx.get(i)]));
   }
 
   let mut fg = Figure::new();

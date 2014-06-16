@@ -7,7 +7,7 @@ extern crate ml;
 use std::from_str::FromStr;
 
 use gnuplot::*;
-use la::matrix::*;
+use la::Matrix;
 use la::util::read_csv;
 use ml::LogisticRegression;
 use ml::graph;
@@ -35,19 +35,19 @@ fn main() {
 
   let mut fg = Figure::new();
   graph::draw_decision_boundary_2d(&mut fg, (30.0, 30.0, 100.0, 100.0), 50, |x, y| {
-    lr.p(&vector(vec![x, y])) - lr.get_threshold()
+    lr.p(&Matrix::vector(vec![x, y])) - lr.get_threshold()
   });
   fg.show();
 
   println!("falses:");
   for i in range(0u, false_x.data.len()) {
-    let p = lr.p(&vector(vec![false_x.get(i, 0), false_y.get(i, 0)]));
-    println!("  {}: {}", lr.predict(&vector(vec![false_x.get(i, 0), false_y.get(i, 0)])), p);
+    let p = lr.p(&Matrix::vector(vec![false_x.get(i, 0), false_y.get(i, 0)]));
+    println!("  {}: {}", lr.predict(&Matrix::vector(vec![false_x.get(i, 0), false_y.get(i, 0)])), p);
   }
   println!("trues:");
   for i in range(0u, true_x.data.len()) {
-    let p = lr.p(&vector(vec![true_x.get(i, 0), true_y.get(i, 0)]));
-    println!("  {}: {}", lr.predict(&vector(vec![true_x.get(i, 0), true_y.get(i, 0)])), p);
+    let p = lr.p(&Matrix::vector(vec![true_x.get(i, 0), true_y.get(i, 0)]));
+    println!("  {}: {}", lr.predict(&Matrix::vector(vec![true_x.get(i, 0), true_y.get(i, 0)])), p);
   }
 
   // Decision boundary is at t'x = 0

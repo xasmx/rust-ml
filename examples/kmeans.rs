@@ -8,7 +8,7 @@ use std::rand;
 use std::vec::Vec;
 
 use gnuplot::*;
-use la::matrix::*;
+use la::Matrix;
 use ml::KMeans;
 
 fn main() {
@@ -20,7 +20,7 @@ fn main() {
     *v.get_mut(i as uint) = 10.0 + 10.0 * rand::random();
   }
   
-  let m = matrix(100, 2, v);
+  let m = Matrix::new(100, 2, v);
   let kmeans = KMeans::cluster(2, &m);
   let assignments = kmeans.get_assignments();
 

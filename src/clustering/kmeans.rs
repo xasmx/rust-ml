@@ -1,7 +1,7 @@
-use la::matrix::*;
-
 use std::num::Float;
 use std::vec::Vec;
+
+use la::Matrix;
 
 pub struct KMeans {
   assignments : Vec<uint>
@@ -14,8 +14,9 @@ impl KMeans {
   ///
   /// ```ignore
   ///   extern crate la;
+  ///   use la::Matrix;
   ///   ...
-  ///   let m = la::m!(1.0, 2.0; 3.0, 4.0; 5.0, 6.0; 7.0, 8.0);
+  ///   let m = Matrix::new(4, 2, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
   ///   let assignments = kmeans(1, &m);
   /// ```
   pub fn cluster(k : uint, m : &Matrix<f64>) -> KMeans {
@@ -127,7 +128,7 @@ fn bounds(m : &Matrix<f64>) -> (Vec<f64>, Vec<f64>) {
 
 fn init(k : uint, m : &Matrix<f64>) -> Matrix<f64> {
   let (min_data, max_data) = bounds(m);
-  let mut means : Matrix<f64> = random(k, m.cols());
+  let mut means : Matrix<f64> = Matrix::random(k, m.cols());
   for row in range(0, means.rows()) {
     for col in range(0, means.cols()) {
       let deviation = *max_data.get(col) - *min_data.get(col);
@@ -140,7 +141,7 @@ fn init(k : uint, m : &Matrix<f64>) -> Matrix<f64> {
 
 #[test]
 fn test_kmeans() {
-  let m = matrix(2, 2, vec![1.0, 2.0, 3.0, 4.0]);
-  let _km = kmeans(1, &m);
+  let m = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]);
+  let _km = KMeans::cluster(1, &m);
 }
 

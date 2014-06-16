@@ -14,7 +14,7 @@ build: $(RUST_SRC)
 
 test-compile: $(RUST_SRC)
 	mkdir -p $(BUILD_DIR)
-	$(RUSTC) --test --out-dir $(BUILD_DIR) $(RUST_SRC)
+	$(RUSTC) $(RUSTFLAGS) --test --out-dir $(BUILD_DIR) $(RUST_SRC)
 
 .PHONY: test
 test: test-compile $(RUST_SRC)

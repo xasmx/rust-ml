@@ -1,4 +1,4 @@
-use la::matrix::*;
+use la::Matrix;
 
 // Gradient descent
 pub fn gradient_descent(

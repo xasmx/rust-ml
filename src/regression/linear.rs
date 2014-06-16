@@ -1,6 +1,6 @@
 use std::vec::Vec;
 
-use la::matrix::*;
+use la::Matrix;
 
 use opt;
 
@@ -10,8 +10,8 @@ pub struct LinearRegression {
 
 impl LinearRegression {
   pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint, iter_notify_f_opt : Option<|f64| -> ()>) -> LinearRegression {
-    let extx = one_vector(x.rows()).cr(x);
-    let mut theta = matrix(extx.cols(), 1, Vec::from_elem(extx.cols(), 0.0f64));
+    let extx = Matrix::one_vector(x.rows()).cr(x);
+    let mut theta = Matrix::new(extx.cols(), 1, Vec::from_elem(extx.cols(), 0.0f64));
 
     let calc_cost = iter_notify_f_opt.is_some();
     let f = if calc_cost { iter_notify_f_opt.unwrap() } else { |_| { } };
@@ -35,7 +35,7 @@ impl LinearRegression {
   }
 
   pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
-    let extx = one_vector(x.rows()).cr(x);
+    let extx = Matrix::one_vector(x.rows()).cr(x);
     LinearRegression {
       theta : (extx.t() * extx).inverse().unwrap() * extx.t() * *y
     }
