@@ -11,7 +11,7 @@ use gnuplot::*;
 use la::matrix::*;
 use la::util::read_csv;
 use ml::regression::linear;
-use ml::graph::costgraph;
+use ml::graph;
 
 fn main() {
   fn parser(s : &str) -> f64 { FromStr::from_str(s).unwrap() };
@@ -31,7 +31,7 @@ fn main() {
   }
 
   let mut fg = Figure::new();
-  costgraph::show_cost_graph(&mut fg, &cost_history);
+  graph::show_cost_graph(&mut fg, &cost_history);
   fg.show();
 
   let mut fg = Figure::new();

@@ -10,7 +10,7 @@ use gnuplot::*;
 use la::matrix::*;
 use la::util::read_csv;
 use ml::classification::logistic;
-use ml::graph::{costgraph,decisionboundary};
+use ml::graph;
 
 fn main() {
   fn parser(s : &str) -> f64 { FromStr::from_str(s).unwrap() };
@@ -30,11 +30,13 @@ fn main() {
   let false_y = false_elements.get_column(1);
 
   let mut fg = Figure::new();
-  costgraph::show_cost_graph(&mut fg, &cost_history);
+  graph::show_cost_graph(&mut fg, &cost_history);
   fg.show();
 
   let mut fg = Figure::new();
-  decisionboundary::show_decision_boundary_2d(&mut fg, &lr);
+  graph::show_decision_boundary_2d(&mut fg, (30.0, 30.0, 100.0, 100.0), 50, |x, y| {
+    lr.p(&vector(vec![x, y])) - lr.get_threshold()
+  });
   fg.show();
 
   println!("falses:");

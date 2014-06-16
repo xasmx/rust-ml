@@ -18,12 +18,6 @@ pub mod regression {
   pub mod linear;
 }
 
-pub mod opt {
-  pub mod graddescent;
-}
-
-pub mod graph {
-  pub mod costgraph;
-  pub mod decisionboundary;
-}
+pub mod graph;
+pub mod opt;
 

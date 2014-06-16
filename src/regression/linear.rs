@@ -2,7 +2,7 @@ use std::vec::Vec;
 
 use la::matrix::*;
 
-use opt::graddescent;
+use opt;
 
 pub struct LinearRegression {
   theta : Matrix<f64>
@@ -27,7 +27,7 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : uint, i
     grad
   };
 
-  graddescent::gradient_descent(&extx, y, &mut theta, alpha, num_iter, grad_f);
+  opt::gradient_descent(&extx, y, &mut theta, alpha, num_iter, grad_f);
   LinearRegression {
     theta : theta
   } 

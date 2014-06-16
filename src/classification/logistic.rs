@@ -1,8 +1,7 @@
 use std::vec::Vec;
 
 use la::matrix::*;
-
-use opt::graddescent;
+use opt;
 
 pub struct LogisticRegression {
   theta : Matrix<f64>,
@@ -32,7 +31,7 @@ pub fn train(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : uint, 
     grad
   };
 
-  graddescent::gradient_descent(&extx, &numy, &mut theta, alpha, num_iter, grad_f);
+  opt::gradient_descent(&extx, &numy, &mut theta, alpha, num_iter, grad_f);
   LogisticRegression {
     theta : theta,
     threshold : 0.5

@@ -1,7 +1,7 @@
 RUSTC?=rustc
 RUSTFLAGS=-L lib
 SRC_DIR=src
-RUST_SRC=${SRC_DIR}/ml.rs
+RUST_SRC=${SRC_DIR}/lib.rs
 BUILD_DIR=out
 
 .PHONY: all
