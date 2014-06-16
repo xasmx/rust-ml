@@ -6,18 +6,22 @@
 extern crate gnuplot;
 extern crate la;
 
-pub mod classification {
-  pub mod logistic;
-}
-
-pub mod clustering {
-  pub mod kmeans;
-}
-
-pub mod regression {
-  pub mod linear;
-}
+pub use classification::logistic::LogisticRegression;
+pub use clustering::kmeans::KMeans;
+pub use regression::linear::LinearRegression;
 
 pub mod graph;
 pub mod opt;
+
+mod classification {
+  pub mod logistic;
+}
+
+mod clustering {
+  pub mod kmeans;
+}
+
+mod regression {
+  pub mod linear;
+}
 

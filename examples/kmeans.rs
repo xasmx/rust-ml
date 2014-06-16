@@ -9,7 +9,7 @@ use std::vec::Vec;
 
 use gnuplot::*;
 use la::matrix::*;
-use ml::clustering::kmeans;
+use ml::KMeans;
 
 fn main() {
   let mut v = Vec::from_elem(200, 0.0f64);
@@ -21,7 +21,8 @@ fn main() {
   }
   
   let m = matrix(100, 2, v);
-  let assignments = kmeans::kmeans(2, &m);
+  let kmeans = KMeans::cluster(2, &m);
+  let assignments = kmeans.get_assignments();
 
   let mut xs = [Vec::with_capacity(100), Vec::with_capacity(100)];
   let mut ys = [Vec::with_capacity(100), Vec::with_capacity(100)];

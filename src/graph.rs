@@ -4,7 +4,7 @@ use gnuplot::*;
 
 /// Draws a graph with x-axis indicating the iteration number and
 /// y-axis showing the cost at that iteration.
-pub fn show_cost_graph(fg : &mut Figure, cost_history : &Vec<f64>) {
+pub fn draw_cost_graph(fg : &mut Figure, cost_history : &Vec<f64>) {
   let mut x = Vec::with_capacity(cost_history.len());
   for i in range(0, cost_history.len()) {
     x.push(i)
@@ -21,7 +21,7 @@ pub fn show_cost_graph(fg : &mut Figure, cost_history : &Vec<f64>) {
 /// Draws a decision boundary at p_f(x, y) = 0 by evaluating the function
 /// within the supplied limits. The function in evaluated as a grid of size
 /// (grid_size x grid_size).
-pub fn show_decision_boundary_2d(fg : &mut Figure, limits : (f64, f64, f64, f64), grid_size : uint, p_f : |f64, f64| -> f64) {
+pub fn draw_decision_boundary_2d(fg : &mut Figure, limits : (f64, f64, f64, f64), grid_size : uint, p_f : |f64, f64| -> f64) {
   assert!(limits.val0() < limits.val2());
   assert!(limits.val1() < limits.val3());
   assert!(grid_size >= 1);

@@ -3,30 +3,42 @@ use la::matrix::*;
 use std::num::Float;
 use std::vec::Vec;
 
-/// Performs K-means clustering on the passed dataset.
-/// Returns a vector of assignments, assigning each data row
-/// to the specific cluster [0, k).
-///
-/// ```ignore
-///   extern crate la;
-///   ...
-///   let m = la::m!(1.0, 2.0; 3.0, 4.0; 5.0, 6.0; 7.0, 8.0);
-///   let assignments = kmeans(1, &m);
-/// ```
-pub fn kmeans(k : uint, m : &Matrix<f64>) -> Vec<uint> {
-  assert!(k >= 1);
+pub struct KMeans {
+  assignments : Vec<uint>
+}
 
-  let mut means = init(k, m);
-  let mut assignments = Vec::from_elem(m.rows(), 0u);
-  perform_assignments(&mut means, &mut assignments, m, false);
-  loop {
-    update_means(&mut means, &mut assignments, m);
-    if !perform_assignments(&mut means, &mut assignments, m, true) {
-      break;
+impl KMeans {
+  /// Performs K-means clustering on the passed dataset.
+  /// Returns a vector of assignments, assigning each data row
+  /// to the specific cluster [0, k).
+  ///
+  /// ```ignore
+  ///   extern crate la;
+  ///   ...
+  ///   let m = la::m!(1.0, 2.0; 3.0, 4.0; 5.0, 6.0; 7.0, 8.0);
+  ///   let assignments = kmeans(1, &m);
+  /// ```
+  pub fn cluster(k : uint, m : &Matrix<f64>) -> KMeans {
+    assert!(k >= 1);
+
+    let mut means = init(k, m);
+    let mut assignments = Vec::from_elem(m.rows(), 0u);
+    perform_assignments(&mut means, &mut assignments, m, false);
+    loop {
+      update_means(&mut means, &mut assignments, m);
+      if !perform_assignments(&mut means, &mut assignments, m, true) {
+        break;
+      }
+    }
+
+    KMeans {
+      assignments : assignments
     }
   }
 
-  assignments
+  pub fn get_assignments<'a>(&'a self) -> &'a Vec<uint> {
+    &self.assignments
+  }
 }
 
 fn perform_assignments(means : &mut Matrix<f64>, assignments : &mut Vec<uint>, m : &Matrix<f64>, check_assignments_flag : bool) -> bool {

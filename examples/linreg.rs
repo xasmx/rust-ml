@@ -10,7 +10,7 @@ use std::vec::Vec;
 use gnuplot::*;
 use la::matrix::*;
 use la::util::read_csv;
-use ml::regression::linear::LinearRegression;
+use ml::LinearRegression;
 use ml::graph;
 
 fn main() {
@@ -31,7 +31,7 @@ fn main() {
   }
 
   let mut fg = Figure::new();
-  graph::show_cost_graph(&mut fg, &cost_history);
+  graph::draw_cost_graph(&mut fg, &cost_history);
   fg.show();
 
   let mut fg = Figure::new();
