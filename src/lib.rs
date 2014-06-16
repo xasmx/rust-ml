@@ -26,4 +26,3 @@ mod clustering {
 mod regression {
   pub mod linear;
 }
-

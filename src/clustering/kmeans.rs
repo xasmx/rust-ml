@@ -13,11 +13,11 @@ impl KMeans {
   /// to the specific cluster [0, k).
   ///
   /// ```ignore
-  ///   extern crate la;
-  ///   use la::Matrix;
-  ///   ...
-  ///   let m = Matrix::new(4, 2, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]);
-  ///   let assignments = kmeans(1, &m);
+  /// #![feature(phase)]
+  /// #[phase(plugin, link)] extern crate la;
+  /// ...
+  /// let m = m!(1.0, 2.0; 3.0, 4.0; 5.0, 6.0; 7.0, 8.0);
+  /// let assignments = KMeans::cluster(1, &m);
   /// ```
   pub fn cluster(k : uint, m : &Matrix<f64>) -> KMeans {
     assert!(k >= 1);
@@ -141,7 +141,7 @@ fn init(k : uint, m : &Matrix<f64>) -> Matrix<f64> {
 
 #[test]
 fn test_kmeans() {
-  let m = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]);
+  let m = m!(1.0, 2.0; 3.0, 4.0);
   let _km = KMeans::cluster(1, &m);
 }
 
