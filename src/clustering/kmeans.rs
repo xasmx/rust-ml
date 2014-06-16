@@ -71,8 +71,8 @@ fn perform_assignments(means : &mut Matrix<f64>, assignments : &mut Vec<uint>, m
 
 fn update_means(means : &mut Matrix<f64>, assignments : &mut Vec<uint>, m : &Matrix<f64>) {
   let mut data_count = Vec::from_elem(means.cols(), 0);
-  for i in range(0, means.data.len()) {
-    *means.data.get_mut(i) = 0.0;
+  for i in range(0, means.get_data().len()) {
+    *means.get_mut_data().get_mut(i) = 0.0;
   }
 
   let mut row_idx = 0;
@@ -81,7 +81,7 @@ fn update_means(means : &mut Matrix<f64>, assignments : &mut Vec<uint>, m : &Mat
 
     let mean_row_idx = assignment * means.cols();
     for col in range(0, m.cols()) {
-      *means.data.get_mut(mean_row_idx + col) += *m.data.get(row_idx + col);
+      *means.get_mut_data().get_mut(mean_row_idx + col) += *m.get_data().get(row_idx + col);
     }
 
     *data_count.get_mut(assignment) += 1;
@@ -91,7 +91,7 @@ fn update_means(means : &mut Matrix<f64>, assignments : &mut Vec<uint>, m : &Mat
   let mut row_idx = 0;
   for row in range(0, means.rows()) {
     for col in range(0, means.cols()) {
-      *means.data.get_mut(row_idx + col) /= *data_count.get(row) as f64;
+      *means.get_mut_data().get_mut(row_idx + col) /= *data_count.get(row) as f64;
     }
 
     row_idx += means.cols();
@@ -111,8 +111,8 @@ fn bounds(m : &Matrix<f64>) -> (Vec<f64>, Vec<f64>) {
   let mut min_data : Vec<f64> = Vec::from_elem(m.cols(), Float::infinity());
   let mut max_data : Vec<f64> = Vec::from_elem(m.cols(), Float::neg_infinity());
   let mut col_idx = 0;
-  for i in range(0, m.data.len()) {
-    let v = *m.data.get(i);
+  for i in range(0, m.get_data().len()) {
+    let v = *m.get_data().get(i);
     if v < *min_data.get(col_idx) {
       *min_data.get_mut(col_idx) = v;
     }

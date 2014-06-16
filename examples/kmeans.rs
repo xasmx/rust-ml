@@ -27,8 +27,8 @@ fn main() {
   let mut xs = [Vec::with_capacity(100), Vec::with_capacity(100)];
   let mut ys = [Vec::with_capacity(100), Vec::with_capacity(100)];
   for i in range(0, assignments.len()) {
-    xs[*assignments.get(i)].push(*m.data.get(i * m.cols()));
-    ys[*assignments.get(i)].push(*m.data.get(i * m.cols() + 1));
+    xs[*assignments.get(i)].push(*m.get_data().get(i * m.cols()));
+    ys[*assignments.get(i)].push(*m.get_data().get(i * m.cols() + 1));
   }
 
   let mut fg = Figure::new();

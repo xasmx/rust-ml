@@ -44,11 +44,11 @@ impl LinearRegression {
   // h(x) = theta^T * [1; x]
   pub fn predict(&self, x : &Matrix<f64>) -> f64 {
     assert!(x.cols() == 1);
-    assert!((x.rows() + 1) == self.theta.data.len());
+    assert!((x.rows() + 1) == self.theta.get_data().len());
 
-    let mut sum = *self.theta.data.get(0);
-    for i in range(1, self.theta.data.len()) {
-      sum += *self.theta.data.get(i) * *x.data.get(i - 1);
+    let mut sum = *self.theta.get_data().get(0);
+    for i in range(1, self.theta.get_data().len()) {
+      sum += *self.theta.get_data().get(i) * *x.get_data().get(i - 1);
     }
 
     sum
