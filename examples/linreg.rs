@@ -10,7 +10,7 @@ use std::vec::Vec;
 use gnuplot::*;
 use la::matrix::*;
 use la::util::read_csv;
-use ml::regression::linear;
+use ml::regression::linear::LinearRegression;
 use ml::graph;
 
 fn main() {
@@ -21,7 +21,7 @@ fn main() {
   let y = data.get_column(1);
   let mut cost_history = vec![];
 
-  let lr = linear::train(&x, &y, 0.005f64, 100, Some(|cost| { cost_history.push(cost); }));
+  let lr = LinearRegression::train(&x, &y, 0.005f64, 100, Some(|cost| { cost_history.push(cost); }));
 
   let mut lx = Vec::from_elem(2, 0.0f64);
   let mut ly = Vec::from_elem(2, 0.0f64);

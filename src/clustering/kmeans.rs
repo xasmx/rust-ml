@@ -3,6 +3,16 @@ use la::matrix::*;
 use std::num::Float;
 use std::vec::Vec;
 
+/// Performs K-means clustering on the passed dataset.
+/// Returns a vector of assignments, assigning each data row
+/// to the specific cluster [0, k).
+///
+/// Example:
+///   extern crate la;
+///   ...
+///   let m = la::m!(1.0, 2.0; 3.0, 4.0; 5.0, 6.0; 7.0, 8.0);
+///   let assignments = kmeans(1, &m);
+///
 pub fn kmeans(k : uint, m : &Matrix<f64>) -> Vec<uint> {
   assert!(k >= 1);
 
