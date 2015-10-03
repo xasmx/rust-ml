@@ -1,12 +1,7 @@
-#![crate_type = "lib"]
-#![crate_id = "ml#0.1"]
-
-#![feature(globs)]
-#![feature(phase)]
-
 extern crate gnuplot;
-
-#[phase(plugin, link)] extern crate la;
+#[macro_use]
+extern crate la;
+extern crate num;
 
 pub use classification::logistic::LogisticRegression;
 pub use clustering::kmeans::KMeans;

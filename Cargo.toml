@@ -1,0 +1,15 @@
+[package]
+name = "ml"
+version = "0.1.0"
+authors = ["Sami Nopanen <snopanen@gmail.com>"]
+license = "Apache-2.0"
+description = "Machine learning library for the Rust programming language."
+homepage = "https://github.com/xasmx/rust-ml"
+repository = "https://github.com/xasmx/rust-ml"
+
+[dependencies]
+num = "0.1.25"
+la = "0.1.0"
+gnuplot = "0.0.18"
+rand = "0.3"
+
