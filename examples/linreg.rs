@@ -11,16 +11,19 @@ use ml::LinearRegression;
 use ml::graph;
 
 fn main() {
-  fn parser(s : &str) -> f64 { FromStr::from_str(s).unwrap() };
-  let data = read_csv("example_data/linreg.csv", &parser);
+  let data = read_csv("example_data/linreg.csv", &|s| {
+    FromStr::from_str(s).unwrap()
+  });
 
-  let x = data.get_column(0);
-  let y = data.get_column(1);
+  let x = data.get_columns(0..(data.cols() - 1));
+  let y = data.get_columns(data.cols() - 1);
   let mut cost_history = vec![];
 
-  let lr = LinearRegression::train(&x, &y, 0.005f64, 100, Some(|cost| {
-    cost_history.push(cost);
-  }));
+  let lr = LinearRegression::new()
+    .learning_rate(0.005f64)
+    .max_iterations(100)
+    .cost_history(&mut |cost| { cost_history.push(cost); })
+    .train(&x, &y);
 
   let mut lx = vec![0.0f64; 2];
   let mut ly = vec![0.0f64; 2];

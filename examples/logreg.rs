@@ -16,7 +16,7 @@ fn main() {
   let data = read_csv("example_data/logreg.csv", &parser);
 
   let x = data.permute_columns(&vec![0, 1]);
-  let y = data.get_column(2).map(&|v : &f64| { if *v == 0.0f64 { false } else { true } });
+  let y = data.get_columns(2).map(&|v : &f64| { if *v == 0.0f64 { false } else { true } });
   let mut cost_history = Vec::new();
   let mut iter_count = 0;
   let lr = LogisticRegression::train(&x, &y, 0.001f64, 500000, Some(|cost| {
@@ -24,11 +24,11 @@ fn main() {
   }));
 
   let true_elements = data.select_rows(&y.get_data());
-  let true_x = true_elements.get_column(0);
-  let true_y = true_elements.get_column(1);
+  let true_x = true_elements.get_columns(0);
+  let true_y = true_elements.get_columns(1);
   let false_elements = data.select_rows(&y.map(&|b| { !b }).get_data());
-  let false_x = false_elements.get_column(0);
-  let false_y = false_elements.get_column(1);
+  let false_x = false_elements.get_columns(0);
+  let false_y = false_elements.get_columns(1);
 
   let mut fg = Figure::new();
   graph::draw_cost_graph(&mut fg, &cost_history);
@@ -62,11 +62,11 @@ fn main() {
   let mut fg = Figure::new();
 
   fg.axes2d()
-  .set_aspect_ratio(Fix(1.0))
-  .points(true_x.get_data().iter(), true_y.get_data().iter(), &[PointSymbol('x'), Color("#ffaa77")])
-  .points(false_x.get_data().iter(), false_y.get_data().iter(), &[PointSymbol('o'), Color("#333377")])
-  .lines(lx.iter(), ly.iter(), &[Color("#006633")])
-  .set_title("Logistic Regression", &[]);
+    .set_aspect_ratio(Fix(1.0))
+    .points(true_x.get_data().iter(), true_y.get_data().iter(), &[PointSymbol('x'), Color("#ffaa77")])
+    .points(false_x.get_data().iter(), false_y.get_data().iter(), &[PointSymbol('o'), Color("#333377")])
+    .lines(lx.iter(), ly.iter(), &[Color("#006633")])
+    .set_title("Logistic Regression", &[]);
 
   fg.show();
 }

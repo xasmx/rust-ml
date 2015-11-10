@@ -1,5 +1,5 @@
 use la::Matrix;
-use opt;
+use opt::GradientDescent;
 
 pub struct LogisticRegression {
   theta : Matrix<f64>,
@@ -7,31 +7,40 @@ pub struct LogisticRegression {
 }
 
 impl LogisticRegression {
-  pub fn train<F : FnMut(f64) -> ()>(x : &Matrix<f64>, y : &Matrix<bool>, alpha : f64, num_iter : usize, mut iter_notify_f_opt : Option<F>) -> LogisticRegression {
+  pub fn train<F : FnMut(f64) -> ()>(x : &Matrix<f64>, y : &Matrix<bool>, learning_rate : f64, max_iterations : usize, mut iter_notify_f_opt : Option<F>) -> LogisticRegression {
     let extx = Matrix::one_vector(x.rows()).cr(x);
     let numy = y.map(&|b : &bool| -> f64 { if *b { 1.0 } else { 0.0 } });
     let mut theta = Matrix::new(extx.cols(), 1, vec![0.0f64; extx.cols()]);
 
-    let grad_f = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> Matrix<f64> {
+    let error_f = |theta : &Matrix<f64>| {
+      (&extx * theta).map(&|t : &f64| -> f64 { 1.0f64 / (1.0f64 + (- *t).exp()) }) - &numy
+    };
+    let grad_f = |error : &Matrix<f64>| {
+      // error = 1 / (1 + e^(- theta^T * x)) - y
+      // grad = 1 / m * x' * error
+      (extx.t() * error).scale(1.0f64 / extx.rows() as f64)
+    };
+    let cost_f = |error : &Matrix<f64>| {
       // J(theta) = 1 / m * SUM{i = 1 to m}: Cost(h_theta(x), y)
       // Cost(h_theta(x), y) = { - log(h_theta(x))		, if y = true (1)
       //                       , - log(1 - h_theta(x)) }	, if y = false (0)
       //                     = - y * log(h_theta(x)) - (1 - y) * log(1 - h_theta(x))
-      // error = 1 / (1 + e^(- theta^T * x)) - y
-      // grad = 1 / m * x' * error
-      let error = (x * theta).map(&|t : &f64| -> f64 { 1.0f64 / (1.0f64 + (- *t).exp()) }) - y;
-      let grad = (x.t() * &error).scale(1.0f64 / (x.rows() as f64));
-      match &mut iter_notify_f_opt {
-        &mut Some(ref mut f) => {
-          let cost = (error.t() * &error).scale(1.0 / x.rows() as f64).get(0, 0);
-          f(cost);
-        }
-        _ => { }
-      }
-      grad
+      (error.t() * error).get(0, 0) / extx.rows() as f64
     };
 
-    opt::gradient_descent(&extx, &numy, &mut theta, alpha, num_iter, grad_f);
+    {
+      let mut grad_desc = GradientDescent::new(learning_rate, &mut theta, &error_f, &grad_f);
+      for _ in 0..max_iterations {
+        let res = grad_desc.iterate();
+        match &mut iter_notify_f_opt {
+          &mut Some(ref mut f) => {
+            f(cost_f(&res.error));
+          }
+          _ => { }
+        }
+      }
+    }
+
     LogisticRegression {
       theta : theta,
       threshold : 0.5

@@ -1,36 +1,76 @@
 use la::Matrix;
 
-use opt;
+use opt::GradientDescent;
+
+pub struct LinearRegressionBuilder<'a> {
+  learning_rate : f64,
+  max_iterations : usize,
+  cost_history_notify_f : Option<&'a mut FnMut(f64)>
+}
 
 pub struct LinearRegression {
   theta : Matrix<f64>
 }
 
-impl LinearRegression {
-  pub fn train<F : FnMut(f64) -> ()>(x : &Matrix<f64>, y : &Matrix<f64>, alpha : f64, num_iter : usize, mut iter_notify_f_opt : Option<F>) -> LinearRegression {
+impl <'a> LinearRegressionBuilder<'a> {
+  pub fn learning_rate(mut self, learning_rate : f64) -> LinearRegressionBuilder<'a> {
+    self.learning_rate = learning_rate;
+    self
+  }
+
+  pub fn max_iterations(mut self, max_iterations : usize) -> LinearRegressionBuilder<'a> {
+    self.max_iterations = max_iterations;
+    self
+  }
+
+  pub fn cost_history(mut self, cost_notify_f : &'a mut FnMut(f64)) -> LinearRegressionBuilder<'a> {
+    self.cost_history_notify_f = Some(cost_notify_f);
+    self
+  }
+
+  pub fn train(&mut self, x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {
+    let learning_rate = self.learning_rate;
+    let max_iterations = self.max_iterations;
     let extx = Matrix::one_vector(x.rows()).cr(x);
     let mut theta = Matrix::new(extx.cols(), 1, vec![0.0f64; extx.cols()]);
-    let grad_f = |x : &Matrix<f64>, y : &Matrix<f64>, theta : &Matrix<f64>| -> Matrix<f64> {
+    let error_f = |theta : &Matrix<f64>| -> Matrix<f64> {
+      &extx * theta - y
+    };
+    let cost_f = |error : &Matrix<f64>| -> f64 {
       // J(x) = 1/(2m) * SUM{i = 1 to m}: (theta . [1;x_i] - y_i)^2
+      (error.t() * error).get(0, 0) / (2.0 * (x.rows() as f64))
+    };
+    let grad_f = |error : &Matrix<f64>| -> Matrix<f64> {
       // dJ(x)/dtheta_j = 1/m * SUM{i = 1 to m}: (theta . [1;x_i] - y_i) * x_i_j
-
-      let error = x * theta - y;
-      let grad = (x.t() * &error).scale(1.0f64 / (x.rows() as f64));
-      match &mut iter_notify_f_opt {
-        &mut Some(ref mut f) => {
-          let cost = (error.t() * &error).scale(1.0 / (2.0 * (x.rows() as f64))).get(0, 0);
-          f(cost);
-        }
-        _ => { }
-      }
-      grad
+      (extx.t() * error).scale(1.0f64 / extx.rows() as f64)
     };
 
-    opt::gradient_descent(&extx, y, &mut theta, alpha, num_iter, grad_f);
+    {
+      let mut grad_desc = GradientDescent::new(learning_rate, &mut theta, &error_f, &grad_f);
+      for _ in 0..max_iterations {
+        let res = grad_desc.iterate();
+        match &mut self.cost_history_notify_f {
+          &mut Some(ref mut f) => {
+            f(cost_f(&res.error));
+          }
+          _ => { }
+        }
+      }
+    }
 
     LinearRegression {
       theta : theta
     } 
+  }
+}
+
+impl LinearRegression {
+  pub fn new<'a>() -> LinearRegressionBuilder<'a> {
+    LinearRegressionBuilder {
+      learning_rate : 0.005f64,
+      max_iterations : 100,
+      cost_history_notify_f : None
+    }
   }
 
   pub fn normal_eq(x : &Matrix<f64>, y : &Matrix<f64>) -> LinearRegression {

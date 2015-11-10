@@ -9,7 +9,10 @@ repository = "https://github.com/xasmx/rust-ml"
 
 [dependencies]
 num = "0.1.25"
-la = "0.1.0"
+#la = "0.2.0"
 gnuplot = "0.0.18"
 rand = "0.3"
+
+[dependencies.la]
+path = "/Users/sami/dev/rust/rust-la"
 

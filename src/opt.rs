@@ -1,18 +1,40 @@
 use la::Matrix;
 
-// Gradient descent
-pub fn gradient_descent<F>(
-    x : &Matrix<f64>,
-    y : &Matrix<f64>,
-    theta : &mut Matrix<f64>,
-    alpha : f64,
-    num_iter : usize,
-    mut grad_f : F)
-where F: FnMut(&Matrix<f64>, &Matrix<f64>, &Matrix<f64>) -> Matrix<f64>
-{
-  for _ in 0..num_iter {
-    let grad = grad_f(x, y, theta);
-    let step = grad.scale(alpha);
-    theta.msub(&step);
+pub struct GradientDescent<'a> {
+  learning_rate : f64,
+  learnable_weights : &'a mut Matrix<f64>,
+  error_f : &'a Fn(&Matrix<f64>) -> Matrix<f64>,
+  grad_f : &'a Fn(&Matrix<f64>) -> Matrix<f64>
+}
+
+pub struct IterationResult {
+  pub error : Matrix<f64>,
+  pub grad : Matrix<f64>
+}
+
+impl <'a> GradientDescent<'a> {
+  pub fn new(
+      learning_rate : f64,
+      learnable_weights : &'a mut Matrix<f64>,
+      error_f : &'a Fn(&Matrix<f64>) -> Matrix<f64>,
+      grad_f : &'a Fn(&Matrix<f64>) -> Matrix<f64>) -> GradientDescent<'a> {
+    GradientDescent {
+      learning_rate : learning_rate,
+      learnable_weights : learnable_weights,
+      error_f : error_f,
+      grad_f : grad_f
+    }
+  }
+
+  pub fn iterate(&mut self) -> IterationResult {
+    let error = (self.error_f)(self.learnable_weights);
+    let mut grad = (self.grad_f)(&error);
+    grad.mscale(self.learning_rate);
+    self.learnable_weights.msub(&grad);
+    IterationResult {
+      error : error,
+      grad : grad
+    }
   }
 }
+

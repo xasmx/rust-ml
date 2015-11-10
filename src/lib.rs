@@ -6,6 +6,7 @@ extern crate num;
 pub use classification::logistic::LogisticRegression;
 pub use clustering::kmeans::KMeans;
 pub use regression::linear::LinearRegression;
+pub use regression::linear::LinearRegressionBuilder;
 
 pub mod graph;
 pub mod opt;
