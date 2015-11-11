@@ -25,7 +25,7 @@ impl LogisticRegression {
       // Cost(h_theta(x), y) = { - log(h_theta(x))		, if y = true (1)
       //                       , - log(1 - h_theta(x)) }	, if y = false (0)
       //                     = - y * log(h_theta(x)) - (1 - y) * log(1 - h_theta(x))
-      (error.t() * error).get(0, 0) / extx.rows() as f64
+      error.dot(&error) / extx.rows() as f64
     };
 
     {

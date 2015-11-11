@@ -37,13 +37,15 @@ fn main() {
   fg.show();
 
   let mut fg = Figure::new();
-
   fg.axes2d()
     .set_aspect_ratio(Fix(1.0))
     .lines(lx.iter(), ly.iter(), &[Color("#006633")])
     .points(x.get_data().iter(), y.get_data().iter(), &[PointSymbol('x'), Color("#ffaa77")])
     .set_title("Linear Regression", &[]);
-
   fg.show();
+
+  println!("Press enter to exit.");
+  let mut s = String::new();
+  let _ = std::io::stdin().read_line(&mut s);
 }
 

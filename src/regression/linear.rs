@@ -38,7 +38,7 @@ impl <'a> LinearRegressionBuilder<'a> {
     };
     let cost_f = |error : &Matrix<f64>| -> f64 {
       // J(x) = 1/(2m) * SUM{i = 1 to m}: (theta . [1;x_i] - y_i)^2
-      (error.t() * error).get(0, 0) / (2.0 * (x.rows() as f64))
+      error.dot(&error) / (2.0 * (x.rows() as f64))
     };
     let grad_f = |error : &Matrix<f64>| -> Matrix<f64> {
       // dJ(x)/dtheta_j = 1/m * SUM{i = 1 to m}: (theta . [1;x_i] - y_i) * x_i_j

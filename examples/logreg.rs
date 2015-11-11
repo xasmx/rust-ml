@@ -69,5 +69,9 @@ fn main() {
     .set_title("Logistic Regression", &[]);
 
   fg.show();
+
+  println!("Press enter to exit.");
+  let mut s = String::new();
+  let _ = std::io::stdin().read_line(&mut s);
 }
 

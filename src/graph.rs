@@ -11,11 +11,11 @@ pub fn draw_cost_graph(fg : &mut Figure, cost_history : &Vec<f64>) {
   }
 
   fg.axes2d()
-  .set_aspect_ratio(Fix(1.0))
-  .set_x_label("Iteration", &[Rotate(0.0)])
-  .set_y_label("Cost", &[Rotate(90.0)])
-  .lines(x.iter(), cost_history.iter(), &[Color("#006633")])
-  .set_title("Cost Graph", &[]);
+    .set_aspect_ratio(Fix(1.0))
+    .set_x_label("Iteration", &[Rotate(0.0)])
+    .set_y_label("Cost", &[Rotate(90.0)])
+    .lines(x.iter(), cost_history.iter(), &[Color("#006633")])
+    .set_title("Cost Graph", &[]);
 }
 
 /// Draws a decision boundary at p_f(x, y) = 0 by evaluating the function
@@ -42,7 +42,7 @@ pub fn draw_decision_boundary_2d(fg : &mut Figure, limits : (f64, f64, f64, f64)
   }
 
   fg.axes3d()
-  .surface(z_array.iter(), grid_size, grid_size, Some((x_start, y_start, x_end, y_end)), &[])
-  .show_contours_custom(true, true, Linear, Fix("Decision Boundary"), [0.0f64].iter());
+    .surface(z_array.iter(), grid_size, grid_size, Some((x_start, y_start, x_end, y_end)), &[])
+    .show_contours_custom(true, true, Linear, Fix("Decision Boundary"), [0.0f64].iter());
 }
 
